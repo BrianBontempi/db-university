@@ -15,3 +15,9 @@ SELECT DISTINCT D.`name` AS 'Corso di Laurea', C.`name` AS 'Materia', T.`surname
 
 --6. Selezionare tutti i docenti che insegnano nel Dipartimento di Matematica (54)
 SELECT DISTINCT DEP.`name` AS 'Nome Dipartimento', T.`surname` AS 'Cognome Prof', T.`name` AS 'Nome Prof' FROM `course_teacher` AS CT JOIN `teachers` AS T ON T.`id`= CT.`teacher_id` JOIN `courses` AS C ON C.`id`= CT.`course_id` JOIN `degrees` AS DEG ON DEG.`id`=C.`degree_id` JOIN `departments` AS DEP ON DEP.`id`=DEG.`department_id` WHERE DEP.`name`='Dipartimento di Matematica';
+
+--7. BONUS: Selezionare per ogni studente il numero di tentativi sostenuti per ogni esame, stampando anche il voto massimo. Successivamente, filtrare i tentativi con voto minimo 18.
+SELECT S.`id` AS 'ID studente', S.`surname` AS 'Cognome Studente', S.`name` AS 'Nome Studente', C.`name` AS 'Corso', COUNT(ES.`exam_id`) AS 'Numero tentativi', MAX(ES.`vote`) AS 'Voto massimo' FROM `exam_student` AS ES JOIN `students` AS S ON S.`id` = ES.`student_id` JOIN `exams` AS E ON E.`id` = ES.`exam_id` JOIN `courses` AS C ON C.`id` = E.`course_id` GROUP BY S.`id`, C.`id` ORDER BY S.`surname`, S.`name`;
+
+--7b. Solo i tentativi con voto minimo 18
+SELECT S.`id` AS 'ID studente', S.`surname` AS 'Cognome Studente', S.`name` AS 'Nome Studente', C.`name` AS 'Corso', COUNT(ES.`exam_id`) AS 'Numero tentativi', MAX(ES.`vote`) AS 'Voto massimo' FROM `exam_student` AS ES JOIN `students` AS S ON S.`id` = ES.`student_id` JOIN `exams` AS E ON E.`id` = ES.`exam_id` JOIN `courses` AS C ON C.`id` = E.`course_id` WHERE ES.`vote` >= 18 GROUP BY S.`id`, C.`id` ORDER BY S.`surname`, S.`name`;
